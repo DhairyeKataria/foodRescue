@@ -148,11 +148,6 @@ class _LoginPageState extends State<LoginPage> {
                                   });
                                   try {
                                     await FirebaseAuth.instance
-                                        .createUserWithEmailAndPassword(
-                                      email: emailController.text.trim(),
-                                      password: passwordController.text.trim(),
-                                    );
-                                    await FirebaseAuth.instance
                                         .signInWithEmailAndPassword(
                                       email: emailController.text.trim(),
                                       password: passwordController.text.trim(),
@@ -161,6 +156,29 @@ class _LoginPageState extends State<LoginPage> {
                                       showIndicator = false;
                                     });
                                   } catch (e) {
+                                    try {
+                                      await FirebaseAuth.instance
+                                          .createUserWithEmailAndPassword(
+                                        email: emailController.text.trim(),
+                                        password:
+                                            passwordController.text.trim(),
+                                      );
+                                      setState(() {
+                                        showIndicator = false;
+                                      });
+                                      return;
+                                    } catch (e) {
+                                      setState(() {
+                                        showIndicator = false;
+                                      });
+                                      ScaffoldMessenger.of(Get.context!)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(e.toString()),
+                                          duration: const Duration(seconds: 3),
+                                        ),
+                                      );
+                                    }
                                     setState(() {
                                       showIndicator = false;
                                     });

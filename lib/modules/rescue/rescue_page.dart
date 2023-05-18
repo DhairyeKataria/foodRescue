@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:food_rescue/modules/home/home_controller.dart';
 import 'package:food_rescue/modules/rescue/rescue_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -306,10 +307,28 @@ class _RescuePageState extends State<RescuePage> {
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () async {
+                      if (controller.food.isEmpty) {
+                        ScaffoldMessenger.of(Get.context!).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Add some food items to create a rescue'),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                        HomeController homeController =
+                            Get.put(HomeController());
+                        homeController.getRescues();
+                        return;
+                      }
+
+                      DocumentSnapshot snapshot = await db
+                          .collection('user')
+                          .doc(FirebaseAuth.instance.currentUser!.email)
+                          .get();
+
                       Rescue rescue = Rescue(
                         foodList: controller.food,
-                        user: db.doc(
-                            'user/${FirebaseAuth.instance.currentUser!.email}'),
+                        user: snapshot.data() as Map<String, dynamic>,
                       );
                       db.collection('order').doc().set(rescue.toMap());
                       ScaffoldMessenger.of(Get.context!).showSnackBar(

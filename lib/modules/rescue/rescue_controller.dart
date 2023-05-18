@@ -8,9 +8,19 @@ class RescueController extends GetxController {
 class Rescue {
   Rescue({required this.foodList, required this.user, this.status, this.date});
   final List<Food> foodList;
-  final DocumentReference user;
+  final Map<String, dynamic> user;
   final String? status;
   final DateTime? date;
+  // final String createdBy;
+  // final String name;
+  // final String addressLine1;
+  // final String addressLine2;
+  // final String landmark;
+  // final String city;
+  // final String state;
+  // final String country;
+  // final int pincode;
+  // final String type;
 
   Map<String, dynamic> toMap() {
     DateTime now = DateTime.now();
@@ -19,7 +29,7 @@ class Rescue {
       'date': date,
       'food': foodList.map((f) => f.toMap()),
       'status': 'Open',
-      'user': user.get(),
+      'user': user,
     };
   }
 

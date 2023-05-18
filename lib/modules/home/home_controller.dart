@@ -12,6 +12,7 @@ class HomeController extends GetxController {
   }
 
   void getRescues() {
+    rescues.value = [];
     final db = FirebaseFirestore.instance;
     db.collection('order').where('status', isEqualTo: 'Open').get().then(
       (querySnapshot) {
